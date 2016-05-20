@@ -5,8 +5,16 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
+// Login & Join
+var login = require('./routes/login');
+// Video upload
+var mediaupload = require('./routes/mediaupload.js');
+// Video Hub
+var mediahub = require('./routes/mediahub.js');
+// Mypage
+var mypage = require('./routes/mypage.js');
+// Video Share
+var mediashare = require('./routes/mediashare.js');
 
 var app = express();
 
@@ -22,8 +30,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
-app.use('/users', users);
+app.use('/', login);
+app.get('/mediaupload', mediaupload);
+app.get('/mediahub', mediahub);
+app.get('/mypage', mypage);
+app.get('/mediashare', mediashare);
+
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
