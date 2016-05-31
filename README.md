@@ -9,3 +9,4 @@
 - mediahub : 업로드된 미디어 보관		/mediahub
 - mypage : 친구관리, 친구추가 등		/mypage
 - mediashare : 친구와 미디어를 공유		/mediashare
+gg
