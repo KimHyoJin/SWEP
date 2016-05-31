@@ -21,7 +21,7 @@ var https = require('https');
 var busboy = require('connect-busboy');
 
 // pass passport for configuration
-require('./config/passport')(passport); 
+require('./config/passport')(passport);
 
 // Login & Join
 var login = require('./routes/login');
@@ -48,12 +48,24 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs'); // set up ejs for templating
+
 app.use('/', login);
 app.get('/mediaupload', mediaupload);
 app.get('/mediahub', mediahub);
 app.get('/mypage', mypage);
 app.get('/mediashare', mediashare);
 
+// required for passport
+app.use(session({
+	secret: 'vidyapathaisalwaysrunning',
+	resave: true,
+	saveUninitialized: true
+ } )); // session secret
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+app.use(flash()); // use connect-flash for flash messages stored in session
 
 
 
@@ -99,4 +111,3 @@ http.createServer(app).listen(port, function(){
 https.createServer(options, app).listen(port2, function(){
   console.log("Https server listening on port " + port2);
 });
-
