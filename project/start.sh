@@ -1,2 +1,2 @@
 #!/bin/sh
-set DEBUG=project & node ./bin/www
+set DEBUG=project & sudo node ./bin/www

@@ -4,6 +4,24 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var morgan = require('morgan');
+var path = require('path');
+var fs = require('fs');
+var app      = express();
+var port     = process.env.PORT || 80;
+var port2    = 443;
+var passport = require('passport');
+var flash    = require('connect-flash');
+var options = {
+		key: fs.readFileSync('ssl/server.key'),
+    		cert: fs.readFileSync('ssl/server.crt')
+};
+var http = require('http');
+var https = require('https');
+var busboy = require('connect-busboy');
+
+// pass passport for configuration
+require('./config/passport')(passport); 
 
 // Login & Join
 var login = require('./routes/login');
@@ -72,3 +90,13 @@ app.use(function(err, req, res, next) {
 
 
 module.exports = app;
+
+http.createServer(app).listen(port, function(){
+  console.log("Http server listening on port " + port);
+});
+
+
+https.createServer(options, app).listen(port2, function(){
+  console.log("Https server listening on port " + port2);
+});
+
