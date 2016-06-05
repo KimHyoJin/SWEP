@@ -1,5 +1,127 @@
-extends layout
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>My Little ShareVideo - My Video</title>
+    <meta name="generator" content="Bootply" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="css/uploadvideo/bootstrap.min.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="css/uploadvideo/styles.css" rel="stylesheet">
+  </head>
+  <body>
+<div class="wrapper" >
+    <div class="box">
+        <div class="row row-offcanvas row-offcanvas-left">
+         
+            <!-- main right col -->
+            <div class="full col-sm-9" id="main">
+                
+                <!-- top nav -->
+                <div class="navbar navbar-blue navbar-static-top" >  
 
-block content
-  h1= title
-  p Welcome to #{title}
+                    <div class="navbar-header">
+                      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                      </button>
+                      <!--<a href="/" class="navbar-brand logo">b</a>-->
+                    </div>
+                    
+                    <nav class="collapse navbar-collapse" role="navigation">
+                    <form class="nav navbar-nav navbar-left title">
+                  
+                      <li>
+                        <a href="/mypage">My Little Share Video </a>
+                      </li>
+                    </form>
+                  
+                    <ul class="nav navbar-nav navbar-right">
+                      <li>
+                        <a href="#">반갑?�니?? <%= user['userName'] %> ??/a>
+                      </li>
+                      <li>
+                        <a href="/logout">LogOut </a>
+                      </li>
+                      <li>
+                        <a href="/uploadvideo">Upload Video </a>
+                      </li>
+                      <li>
+                        <a href="/myvideo">My Video </a>
+                      </li>
+                      <li>
+                        <a href="/videostore">Video Store </a>
+                      </li>
+                    </ul>
+                    </nav>
+                </div>
+                <!-- /top nav -->
+              
+              <!--  <div class="padding">-->
+                    <div class="full col-sm-9">
+                      
+                        <!-- content -->                      
+                        <div class="row">
+                          
+                         <!-- main col left --> 
+                         <div class="col-sm-12 center">
+    
+                              <div class="panel panel-default">
+                                <div class="panel-heading">
+                                  <h4>비디???�로??/h4>
+                                </div>
+                                  <div class="panel-body" align="left">
+                                      <div class-"panel panel-default">
+                                        <form method="post" enctype="multipart/form-data" action="/upload" align = "right">
+                                         <div class="row">
+                                         <!--<div id="filenames">-->
+                                          <h4 class="col-sm-6" align="left" id="filenames">?�택???�일명이 ?�습?�다</h4>
+                                         <!--</div>-->
+                                          <span class="btn btn-default btn-file" align="right">Browse <input type="file" accept="video/mp4, video/*" name = "fileupload"  onchange="reviewUploadImg(this);"></span>
+                                            <script type="text/javascript">
+                                          function reviewUploadImg(fileObj)
+                                            {
+                                             var filePath = fileObj.value;
+                                             var fileName = filePath.substring(filePath.lastIndexOf("\\")+1);
+                                             //alert(fileName);
+                                             document.getElementById("filenames").innerHTML = fileName;
+                                             
+                                            }
+                                            </script>
+
+
+                                          <button type="submit" style="background-color:transparent" >
+                                            <span class="btn btn-default btn-file" align="right">Submit</span>
+                                          </button>
+                                          
+                                          </div>
+                                        </form>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                          
+                          <!-- main col right -->
+                          
+                       </div><!--/row-->
+                           
+                    </div><!-- /col-9 -->
+                <!--</div>--><!-- /padding -->
+            </div>
+            <!-- /main -->
+          
+        </div>
+    </div>
+</div>
+
+  <!-- script references -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="javascripts/uploadvideo/bootstrap.min.js"></script>
+    <script src="javascripts/uploadvideo/scripts.js"></script>
+  </body>
+</html>
