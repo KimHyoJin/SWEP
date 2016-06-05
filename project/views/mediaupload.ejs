@@ -43,7 +43,7 @@
                   
                     <ul class="nav navbar-nav navbar-right">
                       <li>
-                        <a href="#">반갑?�니?? <%= user['userName'] %> ??/a>
+                        <a href="#">반갑습니다. <%= user['userName'] %> 님</a>
                       </li>
                       <li>
                         <a href="/logout">LogOut </a>
@@ -73,14 +73,14 @@
     
                               <div class="panel panel-default">
                                 <div class="panel-heading">
-                                  <h4>비디???�로??/h4>
+                                  <h4>비디오 업로드</h4>
                                 </div>
                                   <div class="panel-body" align="left">
                                       <div class-"panel panel-default">
                                         <form method="post" enctype="multipart/form-data" action="/upload" align = "right">
                                          <div class="row">
                                          <!--<div id="filenames">-->
-                                          <h4 class="col-sm-6" align="left" id="filenames">?�택???�일명이 ?�습?�다</h4>
+                                          <h4 class="col-sm-6" align="left" id="filenames">선택된 파일명이 없습니다</h4>
                                          <!--</div>-->
                                           <span class="btn btn-default btn-file" align="right">Browse <input type="file" accept="video/mp4, video/*" name = "fileupload"  onchange="reviewUploadImg(this);"></span>
                                             <script type="text/javascript">
