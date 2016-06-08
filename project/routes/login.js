@@ -1,9 +1,15 @@
 var express = require('express');
-var router = express.Router();
+var flash    = require('connect-flash');
+var passport = require('passport');
+var mysql = require('mysql');
+var dbconfig = require('../config/database');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('login', { title: 'Express' });
-});
 
-module.exports = router;
+module.exports = (function() {
+	    	var router = express.Router();
+			var connection = mysql.createConnection(dbconfig.connection);
+				connection.query('USE ' + dbconfig.database);
+				    	router.get('/', function(req, res) {
+								res.render('login', { message: req.flash('signupMessage'), message2: req.flash('loginMessage')} );
+									});
+
