@@ -47,13 +47,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-app.use('/', login);
-app.get('/mediaupload', mediaupload);
-app.get('/mediahub', mediahub);
-app.get('/mypage', mypage);
-app.get('/mediashare', mediashare);
-
 // required for passport
 app.use(session({
         secret: 'vidyapathaisalwaysrunning',
@@ -65,6 +58,24 @@ app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 app.use(busboy());
 
+app.use('/', login);
+app.get('/uploadvideo', mediaupload);
+app.get('/videostore', mediahub);
+app.get('/mypage', mypage);
+app.get('/mediashare', mediashare);
+app.get('/myvideo', mediahub);
+app.get('/chatroom', mediashare);
+app.post('/upload', mediaupload);
+app.post('/startchat',mediashare);
+app.post('/receivechat', mediashare);
+app.post('/addFriend',mypage);
+
+
+// logout
+app.get('/logout', function(req, res) {
+	req.logout();
+	res.redirect('/');
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
