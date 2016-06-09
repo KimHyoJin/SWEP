@@ -44,6 +44,18 @@ module.exports = (function() {
 
     });
 
+    router.post('/startchat',isLoggedIn, function(req, res){
+        var insertQuery = "INSERT INTO chat (sender, receiver, video, channel) values (?,?,?,?)";
+
+            connection.query(insertQuery,[req.user['email'], req.body.friend, req.body.video, req.body.channel ] ,function(err, rows) {
+              if (err)
+                console.error(err);
+              res.end();
+              console.log("[startchat] 채팅 요청 성공!");
+          });
+      });
+
+    return router;
     return router;
 
 })();
