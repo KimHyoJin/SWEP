@@ -28,6 +28,35 @@ module.exports = (function() {
       });
     });
 
+    router.post('/receivechat', isLoggedIn, function(req, res){
+      connection.query("SELECT sender FROM chat WHERE receiver = ?",[ req.user['email'] ], function(err, rows) {
+          if (err)
+              return done(err);
+          if (rows.length) {
+            console.log("[receivechat] 채팅 받음");
+            res.send({received: true, sender: rows[0].sender});
+          }
+          else{
+            console.log("[receivechat] 채팅 안 받음");
+            res.send({received: false});
+          }
+        });
+
+    });
+
+    router.post('/startchat',isLoggedIn, function(req, res){
+      var insertQuery = "INSERT INTO chat (sender, receiver, video, channel) values (?,?,?,?)";
+
+          connection.query(insertQuery,[req.user['email'], req.body.friend, req.body.video, req.body.channel ] ,function(err, rows) {
+            if (err)
+              console.error(err);
+            res.end();
+            console.log("[startchat] 채팅 요청 성공!");
+        });
+    });
+
+    return router;
+
 })();
 
 function isLoggedIn(req, res, next) {
