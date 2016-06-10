@@ -24,3 +24,28 @@ router.get('/logout', function(req, res) {
 	        res.redirect('/');
 });
 
+//process the login form
+router.post('/signin', passport.authenticate('local-login', {
+	successRedirect : '/mypage', // redirect to the secure profile section
+	            failureRedirect : '/', // redirect back to the signup page if there is an error
+	            failureFlash : true // allow flash messages
+			}),
+
+	function(req, res) {
+		            if (req.body.remember) {
+				                  req.session.cookie.maxAge = 1000 * 60 * 3;
+						              } else {
+								                    req.session.cookie.expires = false;
+										                }
+			            	res.redirect('/');
+					    	});
+
+//process the signup form
+router.post('/signup', passport.authenticate('local-signup', {
+			successRedirect : '/mypage', // redirect to the secure profile section
+			failureRedirect : '/error', // redirect back to the signup page if there is an error
+			failureFlash : true // allow flash messages
+		}));
+
+    return router;    
+    })();
