@@ -1,57 +1,71 @@
 var express = require('express');
-var router = express.Router();
+var flash    = require('connect-flash');
+var passport = require('passport');
+var mysql = require('mysql');
+var dbconfig = require('../config/database');
+var fs = require('fs');
 
-/* GET home page. */
-router.get('/mediashare', function(req, res, next) {
-//  res.render('mediashare', { title: 'mediashare' });
-
-  	var admin = "admin@root";
-  	var friends ="";
-
-  	connection.query("SELECT user2 FROM friends WHERE user1= ?",[req.user['email']], function(err, rows) {
-      if (err)
-         return done(err);
-      if (rows.length) {
-      	friends = rows;
-      	console.log("[mediashare] 친구 있음");
-
-      	connection.query("SELECT * FROM video WHERE isStore = ?",[admin], function(err, rows) {
-  	    if (err)
-  	        return done(err);
-  	    if (rows.length) {
-  	    	console.log("[mediashare] 비디오 있음");
+module.exports = (function() {
+    var router = express.Router();
+    var connection  = mysql.createConnection(dbconfig.connection);
+    connection.query('USE ' + dbconfig.database);
 
 
-  	    	res.render('mediashare', {
-  				user: req.user, result: rows, myfriend: friends});
-  	    }
-  	    else
-  	    {
-  	    	console.log("[mediashare] 비디오 없음");
-  		    connection.query("SELECT * FROM video WHERE isStore = ?",[admin], function(err, rows) {
-  		    if (err)
-  		        return done(err);
-  		    if (rows.length) {
-  		    	console.log("[mediashare] 비디오 있음");
+    router.get('/chatroom', isLoggedIn, function(req, res){
+      connection.query("SELECT count(*) as `count`, channel, video FROM chat WHERE receiver = ? order by chatid desc",[ req.user['email'] ], function(err, rows) {
+        var channel = "";
+        var video= "";
 
-  		    	res.render('mediashare', {
-  					user: req.user, result: null, myfriend: friends});
-  		    }
-  	    });
-  		}
-  		});
-      }
-      else
-      {
-      	console.log("[mediashare] 친구 없음");
-      	res.render('mypage', {
-  			user: req.user, result: null});
-      }
-  	});
+        if (rows[0].count)
+        {
+          channel = rows[0].channel;
+          video = rows[0].video;
+        }
+        if (!video)
+          video = req.query.video;
+        console.log(rows[0].count, rows[0].channel, rows[0].video);
+        res.render('chatroom', {user: req.user, channel: channel, video: video});
+      });
+    });
 
-});
+    router.post('/receivechat', isLoggedIn, function(req, res){
+      connection.query("SELECT sender FROM chat WHERE receiver = ?",[ req.user['email'] ], function(err, rows) {
+          if (err)
+              return done(err);
+          if (rows.length) {
+            console.log("[receivechat] 채팅 받음");
+            res.send({received: true, sender: rows[0].sender});
+          }
+          else{
+            console.log("[receivechat] 채팅 안 받음");
+            res.send({received: false});
+          }
+        });
 
+    });
 
+    router.post('/startchat',isLoggedIn, function(req, res){
+        var insertQuery = "INSERT INTO chat (sender, receiver, video, channel) values (?,?,?,?)";
 
+            connection.query(insertQuery,[req.user['email'], req.body.friend, req.body.video, req.body.channel ] ,function(err, rows) {
+              if (err)
+                console.error(err);
+              res.end();
+              console.log("[startchat] 채팅 요청 성공!");
+          });
+      });
 
-module.exports = router;
+    return router;
+    return router;
+
+})();
+
+function isLoggedIn(req, res, next) {
+
+        // if user is authenticated in the session, carry on
+        if (req.isAuthenticated())
+                return next();
+
+        // if they aren't redirect them to the home page
+        res.redirect('/');
+}

@@ -1,26 +1,29 @@
-<DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <title>MediaTalk - Video Store</title>
+    <title>MediaTalk - My Video</title>
     <meta name="generator" content="Bootply" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href="css/videostore/bootstrap.min.css" rel="stylesheet">
+    <link href="css/myvideo/bootstrap.min.css" rel="stylesheet">
     <!--[if lt IE 9]>
       <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <link href="css/videostore/styles.css" rel="stylesheet">
+    <link href="css/myvideo/styles.css" rel="stylesheet">
   </head>
   <body>
-<div class="wrapper" style="heigth:100%">
+<div class="wrapper">
     <div class="box">
         <div class="row row-offcanvas row-offcanvas-left">
+                      
+        
+          
             <!-- main right col -->
             <div class="full col-sm-9" id="main">
-
+                
                 <!-- top nav -->
-               <div class="navbar navbar-blue navbar-static-top" >
+                <div class="navbar navbar-blue navbar-static-top" >  
 
                     <div class="navbar-header">
                       <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
@@ -31,7 +34,7 @@
                       </button>
                       <!--<a href="/" class="navbar-brand logo">b</a>-->
                     </div>
-
+                    
                     <nav class="collapse navbar-collapse" role="navigation">
                     <form class="nav navbar-nav navbar-left title">
                         <!--<div class="input-group input-group-sm" style="max-width:360px;">
@@ -44,7 +47,7 @@
                         <a href="/mypage">MediaTalk </a>
                       </li>
                     </form>
-
+                  
                     <ul class="nav navbar-nav navbar-right">
                       <li>
                         <a href="#">반갑습니다. <%= user['userName'] %> 님</a>
@@ -65,60 +68,43 @@
                     </nav>
                 </div>
                 <!-- /top nav -->
-
+              
                 <div class="padding">
                     <div class="full col-sm-9">
-
-                        <!-- content -->
+                      
+                        <!-- content -->                      
                         <div class="row">
-
-                         <!-- main col left -->
-                         <% if(result){ %>
-
+                          
+                         <!-- main col left --> 
+                         
+                         <% if(result) { %> 
                          <% for(var i =0; i<result.length; i++){ %>
                          <div class="col-sm-4">
                             <% for(var j=i;j<result.length; j+=3) {%>
                              <div class="panel panel-default">
                                 <div class="panel-heading">
-                                  <a class="pull-right" data-user="<%= result[j]['videoname'] %>" data-toggle="modal" data-target="#myModal">친구와 함께 보기</a>
-                                  <h4><%= result[j]['videoname'] %></h4></div>
+                                  <a href="#" data-toggle="modal" data-target="#postModal" class="pull-right">친구와 함께 보기</a> 
+          <h4><%= result[j]['videoname'] %></h4></div>
                                   <video controls style="width:100%;" >
                                       <source src="/files/<%=result[j]['videoname']%>" type="video/mp4">
                                   </video>
-                              </div>
+                              </div>    
                             <% } %>
-                         </div>
+                         </div>  
                          <% } %>
                          <% } %>
-
-                           <div class="modal fade" id="myModal" role="dialog">
-                            <div class="modal-dialog modal-sm">
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                  <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                  <h4 class="modal-title">친구목록</h4>
-                                </div>
-                                <div class="modal-body">
-                                  <% if(myfriend) {%>
-                                    <% for(key in myfriend) { %>
-                                      <a class="modal-friend" href="https://52.34.154.77/chatroom?friend=<%= myfriend[key].user2 %>"><h4> &nbsp; <%= myfriend[key].user2 %></h4></a>
-                                    <% } %>
-                                  <% } %>
-                                </div>
-                                <div class="modal-footer">
-                                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                      </div><!--/row-->
+                           
+                      
+                              
+                           
+                        </div>
+                       </div><!--/row-->
 
                     </div><!-- /col-9 -->
                 </div><!-- /padding -->
             </div>
             <!-- /main -->
-
+          
         </div>
     </div>
 </div>
@@ -129,37 +115,10 @@
   <div class="modal-dialog">
   <div class="modal-content">
       <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">脳</button>
-      Update Status
-      </div>
-      <div class="modal-body">
-          <form class="form center-block">
-            <div class="form-group">
-              <textarea class="form-control input-lg" autofocus="" placeholder="What do you want to share?"></textarea>
-            </div>
-          </form>
-      </div>
-      <div class="modal-footer">
-          <div>
-          <button class="btn btn-primary btn-sm" data-dismiss="modal" aria-hidden="true">Post</button>
-            <ul class="pull-left list-inline"><li><a href=""><i class="glyphicon glyphicon-upload"></i></a></li><li><a href=""><i class="glyphicon glyphicon-camera"></i></a></li><li><a href=""><i class="glyphicon glyphicon-map-marker"></i></a></li></ul>
-      </div>
-      </div>
-  </div>
-  </div>
-</div>
-  <!-- script references -->
+<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>          
+
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
-    <script src="javascripts/videostore/bootstrap.min.js"></script>
-    <script src="javascripts/videostore/scripts.js"></script>
-    <script>
-      $('#myModal').on('show.bs.modal', function (e) {
-        var video = $(e.relatedTarget).data('user');
-        $('.modal-friend').each(function () {
-          var href = $(this).attr('href');
-          $(this).attr('href', href+"&video="+video);
-        });
-      });
-    </script>
+    <script src="javascripts/myvideo/bootstrap.min.js"></script>
+    <script src="javascripts/myvideo/scripts.js"></script>
   </body>
 </html>

@@ -1,15 +1,14 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
-router.get('/videoupload', function(req, res, next) {
-  res.render('videoupload', { title: 'videoupload' });
-});
+var mysql = require('mysql');
+var dbconfig = require('../config/database');
+var connection = mysql.createConnection(dbconfig.connection);
 
 module.exports = router;
 
 router.get('/uploadvideo',isLoggedIn, function(req, res) {
-res.render('uploadvideo.ejs', {
+res.render('mediaupload.ejs', {
 	user : req.user // get the user out of session and pass to template
 	});
 });
@@ -20,9 +19,9 @@ router.post('/upload', function(req, res) {
     var fstream;
     req.pipe(req.busboy);
     req.busboy.on('file', function (fieldname, file, filename) {
-    console.log("Uploading: " + filename); 
+    console.log("Uploading: " + filename);
         fstream = fs.createWriteStream(__dirname+'/../public/files/' + filename);
-       	console.log("Uploading finish: " + filename); 
+       	console.log("Uploading finish: " + filename);
 
         file.pipe(fstream);
 
@@ -43,3 +42,14 @@ router.post('/upload', function(req, res) {
 
     });
 });
+
+// route middleware to make sure
+function isLoggedIn(req, res, next) {
+
+	// if user is authenticated in the session, carry on
+	if (req.isAuthenticated())
+		return next();
+
+	// if they aren't redirect them to the home page
+	res.redirect('/');
+}
