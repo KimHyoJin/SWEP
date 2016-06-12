@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <title>My Little ShareVideo - Chat Room</title>
+    <title>MediaTalk - Chat Room</title>
     <meta name="generator" content="Bootply" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link href="css/videostore/bootstrap.min.css" rel="stylesheet">
@@ -11,7 +11,7 @@
       <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <link href="css/chatroom/styles.css" rel="stylesheet">
-
+    <!-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"> -->
     <style>
       .local-video_caller {
         width: 300px;
@@ -66,6 +66,350 @@
     </style>
   </head>
   <body>
+<div class="wrapper" style="heigth:100%">
+    <div class="box">
+        <div class="row row-offcanvas row-offcanvas-left">
+            <!-- main right col -->
+            <div class="full col-sm-9" id="main">
+                
+                <!-- top nav -->
+               <div class="navbar navbar-blue navbar-static-top" >  
 
+                    <div class="navbar-header">
+                      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                      </button>
+                      <!--<a href="/" class="navbar-brand logo">b</a>-->
+                    </div>
+                    
+                    <nav class="collapse navbar-collapse" role="navigation">
+                    <form class="nav navbar-nav navbar-left title">
+                          <li>
+                        <a href="/mypage">MediaTalk </a>
+                      </li>
+                    </form>
+                  
+                    <ul class="nav navbar-nav navbar-right">
+                      <li>
+                        <a href="#">반갑습니다. <%= user['userName'] %> 님</a>
+                      </li>
+                      <li>
+                        <a href="/logout">LogOut </a>
+                      </li>
+                      <li>
+                        <a href="/uploadvideo">Upload Video </a>
+                      </li>
+                      <li>
+                        <a href="/myvideo">My Video </a>
+                      </li>
+                      <li>
+                        <a href="/videostore">Video Store </a>
+                      </li>
+                    </ul>
+                    </nav>
+                </div>
+                <!-- /top nav -->
+              
+                <div class="padding">
+                    <div class="full col-sm-9">
+                      
+                        <!-- content -->                      
+                        <div class="row">
+                          
+                          <!-- Caller -->
+                          <div class="col-sm-4">
+                          <h3 class="h4">영상통화 요청하기</h3>
+                          <form class="form-inline">
+                            <div class="form-group">
+                              <label class="sr-only" for="createChannelId">Channel Id</label>
+                              <input class="form-control" type="text" id="createChannelId" placeholder="Create a channel." value="">
+                            </div>
+                            <button class="btn btn-default" id="createChannel">
+                              <span class="glyphicon glyphicon-phone-alt" aria-hidden="true"></span> 영상통화 시작하기
+                            </button>
+                          </form>
+
+                          <video class="remote-video_caller center-block" id="callerRemoteVideo"></video>
+                          <video class="local-video_caller pull-right" id="callerLocalVideo"></video>
+
+                        </div>
+
+                        <!-- Video -->
+                        <div class="col-md-4">
+                          <video controls style="width:100%;" >
+                            <source src="/files/<%= video %>" type="video/mp4">
+                          </video>
+                        </div>
+
+
+                        <div class="col-md-4">
+                          <h3 class="h4">영상통화 대기하기</h3>
+                          <form class="form-inline">
+                            <div class="form-group">
+                              <label class="sr-only" for="connectChannelId">Channel Id</label>
+                              <input class="form-control" type="text" id="connectChannelId" placeholder="Enter the ChannelId." value="<%= channel%>">
+                            </div>
+                            <button class="btn btn-default" id="connectChannel">
+                              <span class="glyphicon glyphicon-earphone" aria-hidden="true"> 영상통화 시작하기
+                            </button>
+                          </form>
+
+                          <video class="remote-video_callee center-block" id="calleeRemoteVideo"></video>
+                          <video class="local-video_callee pull-right" id="calleeLocalVideo"></video>
+
+                        </div>
+
+                        </div><!--/row-->
+
+<div class="col-md-4"></div>
+
+<div class="col-md-4">
+
+      <div class="well chat-timeline" id="timeline" style="overflow: auto;">
+        </div>
+
+        <form>
+          <label class="sr-only" for="sendMessage">Transfer Message</label>
+          <div class="input-group input-group-sm">
+            <div class="input-group-addon">
+              <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+            </div>
+            <input type="text" class="form-control" id="sendMessage" placeholder="Enter your message.">
+            <span class="input-group-btn">
+              <button class="btn btn-default" id="sendText">
+                <span class="glyphicon glyphicon-send" aria-hidden="true"></span> Send
+              </button>
+            </span>
+          </div>
+        </form>
+
+</div>
+
+
+
+
+
+                        
+                    </div><!-- /col-9 -->
+                </div><!-- /padding -->
+            </div>
+            <!-- /main -->
+          
+        </div>
+    </div>
+</div>
+
+  <!-- script references -->
+
+ <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+  <script src="//www.playrtc.com/sdk/js/playrtc.js"></script>
+  <script>
+    'use strict';
+    var createChannelButton = document.querySelector('#createChannel');
+    var createChannelIdInput = document.querySelector('#createChannelId');
+
+var sendMessageInput = document.querySelector('#sendMessage');
+var sendTextButton = document.querySelector('#sendText');
+var chattingTimeline = document.querySelector('#timeline');
+
+var appCaller;
+var sampleText;
+
+    appCaller = new PlayRTC({
+      projectKey: 'aa732f5c-69e2-4e25-8064-65ea3a70211e',
+      localMediaTarget: 'callerLocalVideo',
+      remoteMediaTarget: 'callerRemoteVideo',
+      ring: true
+    });
+<!--
+appCaller.on('addDataStream', function (pid, uid, dataChannel) {
+      dataChannel.on('message', function (message) {
+        var chatParagraph;
+        if (message.type === 'text') {
+          chatParagraph = document.createElement('p');
+          chatParagraph.classList.add('local');
+          chatParagraph.textContent = message.data;
+          chattingTimeline.appendChild(chatParagraph);
+        } else if (message.type === 'file') {
+          PlayRTC.utils.fileDownload(message.blob, message.fileName);
+          sendFileToRemoteBar.style.width = '0px';
+        }
+      });
+      dataChannel.on('progress', function (message) {
+        var width = sendFileToRemoteBarWrapper.clientWidth;
+        var progressbar = (width / message.fragCount) * (message.fragIndex + 1);
+        if (message.totalSize === message.fragSize) {
+          return;
+        }
+        sendFileToRemoteBar.style.width = progressbar + 'px';
+      });
+      dataChannel.on('error', function (event) {
+        <!-- alert('ERROR. See the log.'); -->
+	var chatParagraph;  
+	chatParagraph = document.createElement('p');
+        console.log("error why");  
+	chatParagraph.classList.add('local');
+          chatParagraph.textContent = sampleText2;
+          chattingTimeline.appendChild(chatParagraph);
+      });
+    });
+-->
+sendTextButton.addEventListener('click', function (event) {
+      var chatParagraph;
+      var message = sendMessageInput.value;
+      event.preventDefault();
+      if (message) {
+        appCaller.sendText(message);
+        chatParagraph = document.createElement('p');
+        chatParagraph.classList.add('remote');
+        chatParagraph.textContent = message;
+	sampleText = message;
+	console.log("[caller] : "+sampleText);
+        chattingTimeline.appendChild(chatParagraph);
+      }
+      sendMessageInput.value = '';
+    }, false);
+
+    appCaller.on('connectChannel', function(channelId) {
+      createChannelIdInput.value = channelId;
+    });
+    appCaller.on('ring', function(pid, uid) {
+      if (window.confirm('Would you like to get a call?')) {
+        appCaller.accept(pid);
+      } else {
+        appCaller.reject(pid);
+      }
+    });
+    appCaller.on('accept', function() {
+      alert('Peer get your connect.');
+    });
+    appCaller.on('reject', function() {
+      alert('Peer turn down your connect.');
+    });
+    createChannelButton.addEventListener('click', function(event) {
+      event.preventDefault();
+      appCaller.createChannel();
+    }, false);
+  
+
+
+</script>
+
+
+  <script>
+    'use strict';
+    var connectChannelIdInput = document.querySelector('#connectChannelId');
+    var connectChannelButton = document.querySelector('#connectChannel');
+var sendMessageInput = document.querySelector('#sendMessage');
+var sendTextButton = document.querySelector('#sendText');
+var chattingTimeline = document.querySelector('#timeline');
+
+var sampleText2;
+    
+var appCallee;
+    appCallee = new PlayRTC({
+      projectKey: 'aa732f5c-69e2-4e25-8064-65ea3a70211e',
+      localMediaTarget: 'calleeLocalVideo',
+      remoteMediaTarget: 'calleeRemoteVideo',
+      ring: true
+    });
+
+appCallee.on('addDataStream', function (pid, uid, dataChannel) {
+      dataChannel.on('message', function (message) {
+        var chatParagraph;
+        if (message.type === 'text') {
+          chatParagraph = document.createElement('p');
+          chatParagraph.classList.add('local');
+          chatParagraph.textContent = message.data;
+          chattingTimeline.appendChild(chatParagraph);
+        } else if (message.type === 'file') {
+          PlayRTC.utils.fileDownload(message.blob, message.fileName);
+          sendFileToRemoteBar.style.width = '0px';
+        }
+      });
+      dataChannel.on('progress', function (message) {
+        var width = sendFileToRemoteBarWrapper.clientWidth;
+        var progressbar = (width / message.fragCount) * (message.fragIndex + 1);
+        if (message.totalSize === message.fragSize) {
+          return;
+        }
+        sendFileToRemoteBar.style.width = progressbar + 'px';
+      });
+      dataChannel.on('error', function (event) {
+        <!--alert('ERROR. See the log.');-->
+	var chatParagraph;  
+
+	chatParagraph = document.createElement('p');
+          chatParagraph.classList.add('local');
+          chatParagraph.textContent = sampleText;
+          chattingTimeline.appendChild(chatParagraph);
+      });
+    });
+
+sendTextButton.addEventListener('click', function (event) {
+      var chatParagraph;
+      var message = sendMessageInput.value;
+      event.preventDefault();
+      if (message) {
+        appCallee.sendText(message);
+        chatParagraph = document.createElement('p');
+        chatParagraph.classList.add('remote');
+        chatParagraph.textContent = message;
+	sampleText2 = message;
+	console.log("[callee] : "+sampleText2);
+        chattingTimeline.appendChild(chatParagraph);
+      }
+      sendMessageInput.value = '';
+    }, false);
+
+
+
+    appCallee.on('ring', function(pid, uid) {
+      if (window.confirm('Would you like to get a call?')) {
+        appCallee.accept(pid);
+      } else {
+        appCallee.reject(pid);
+      }
+    });
+    connectChannelButton.addEventListener('click', function(event) {
+      var channelId = connectChannelIdInput.value;
+      event.preventDefault();
+      if (!channelId) {
+        return;
+      }
+      appCallee.connectChannel(channelId);
+    }, false);
+
+
+
+
+  </script>
+  <script type="text/javascript">
+    var timer;
+    function poll() {
+      console.log('a');
+      if ($('#createChannelId').val().length && location.search.length) {
+        var and_index = location.search.indexOf('&');
+        var first_equal_index = location.search.indexOf('=');
+        var last_equal_index = location.search.lastIndexOf('=');
+        var friend = location.search.substring(first_equal_index+1, and_index);
+        var video = location.search.substring(last_equal_index+1, location.search.length);
+        $.ajax({
+          url: '/startchat',
+          method: 'post',
+          data: {friend: friend, video: video, channel: $('#createChannelId').val()}
+        });
+        window.clearInterval(timer);
+      }
+    }
+    timer = window.setInterval(function() {poll();}, 1000);
+  </script>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="javascripts/videostore/bootstrap.min.js"></script>
+    <script src="javascripts/videostore/scripts.js"></script>
   </body>
 </html>
