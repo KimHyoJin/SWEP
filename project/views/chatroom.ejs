@@ -11,6 +11,59 @@
       <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <link href="css/chatroom/styles.css" rel="stylesheet">
+
+    <style>
+      .local-video_caller {
+        width: 300px;
+        height: 200px;
+        z-index: 10;
+        position: fixed;
+        display: block;
+        bottom: 50px;
+        left: 45px;
+      }
+      .remote-video_caller {
+        width: 300px;
+        height: 200px;
+        z-index: 10;
+        position: fixed;
+        display: block;
+        bottom: 50px;
+        right: 45px;
+      }
+
+      .local-video_callee {
+        width: 300px;
+        height: 200px;
+        z-index: 10;
+        position: fixed;
+        display: block;
+        bottom: 50px;
+        left: 45px;
+      }
+      .remote-video_callee {
+        width: 300px;
+        height: 200px;
+        z-index: 10;
+        position: fixed;
+        display: block;
+        bottom: 50px;
+        right: 45px;
+      }
+
+    .chat-timeline {
+      height: 200px;
+      font-size: 9px;
+      overflow: auto;
+    }
+    .chat-timeline .local {
+      color: blue;
+    }
+    .chat-timeline .remote {
+      color: red;
+    }
+
+    </style>
   </head>
   <body>
 
